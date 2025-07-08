@@ -1,0 +1,86 @@
+/* Theme System and Dark Mode Support */
+
+/* Dark Theme Variables */
+:root[data-theme="dark"] {
+    /* Color Variables for Dark Mode */
+    --primary-color: #60a5fa;
+    --secondary-color: #3b82f6;
+    --accent-color: #22d3ee;
+    --text-dark: #f9fafb;
+    --text-light: #d1d5db;
+    --background-light: #374151;
+    --background-white: #1f2937;
+    --background-dark: #111827;
+    --background-dark-light: #374151;
+    --border-color: #4b5563;
+    --border-dark: #6b7280;
+    
+    /* Shadow Variables for Dark Mode */
+    --shadow-light: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+    --shadow-medium: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
+    --shadow-heavy: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+    
+    /* Gradient Variables for Dark Mode */
+    --gradient-primary: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+    --gradient-secondary: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+    --gradient-accent: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+    --gradient-gold: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+}
+
+/* Auto Dark Mode (System Preference) */
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+        /* Apply dark theme variables when system preference is dark */
+        --primary-color: #60a5fa;
+        --secondary-color: #3b82f6;
+        --accent-color: #22d3ee;
+        --text-dark: #f9fafb;
+        --text-light: #d1d5db;
+        --background-light: #374151;
+        --background-white: #1f2937;
+        --background-dark: #111827;
+        --background-dark-light: #374151;
+        --border-color: #4b5563;
+        --border-dark: #6b7280;
+        
+        --shadow-light: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+        --shadow-medium: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
+        --shadow-heavy: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+        
+        --gradient-primary: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+        --gradient-secondary: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+        --gradient-accent: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+        --gradient-gold: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    }
+    
+    /* Body background for dark mode */
+    body {
+        background: var(--gradient-primary);
+    }
+}
+
+/* Theme Toggle Button */
+.theme-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    background: var(--background-white);
+    border: 2px solid var(--border-color);
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--font-size-lg);
+    color: var(--text-dark);
+    transition: all var(--transition-normal);
+    z-index: 100;
+    box-shadow: var(--shadow-medium);
+}
+
+.theme-toggle:hover {
+    transform: scale(1.1);
+    box-shadow: var(--shadow-heavy);
+}
