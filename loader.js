@@ -49,13 +49,12 @@ async function loadHTML(containerId, filePath) {
  */
 async function loadAllComponents() {
     const components = [
-        { containerId: 'book-cover-container', filePath: 'components/book-cover.html' },
-        { containerId: 'left-page-container', filePath: 'components/left-page.html' },
-        { containerId: 'experience-section-container', filePath: 'components/experience.html' },
-        { containerId: 'education-section-container', filePath: 'components/education.html' },
-        { containerId: 'skills-section-container', filePath: 'components/skills.html' },
-        { containerId: 'portfolio-section-container', filePath: 'components/portfolio.html' },
+        { containerId: 'profile-section-container', filePath: 'components/profile.html' },
+        { containerId: 'education-left-container', filePath: 'components/education.html' },
+        { containerId: 'skills-left-container', filePath: 'components/skills.html' },
         { containerId: 'contact-section-container', filePath: 'components/contact.html' },
+        { containerId: 'experience-section-container', filePath: 'components/experience.html' },
+        { containerId: 'portfolio-section-container', filePath: 'components/portfolio.html' },
         { containerId: 'navigation-container', filePath: 'components/navigation.html' }
     ];
 
@@ -86,11 +85,7 @@ function initializePortfolio() {
             // Initialize portfolio with additional enhancements
             const portfolio = new PortfolioBook();
             
-            // Add additional enhancements
-            if (typeof portfolio.addParallaxEffect === 'function') {
-                portfolio.addParallaxEffect();
-            }
-            
+            // Add remaining enhancements (parallax removed for static book)
             if (typeof portfolio.initSmoothScrolling === 'function') {
                 portfolio.initSmoothScrolling();
             }

@@ -1,4 +1,4 @@
-<div class="left-page">
+<div id="profile-page" class="content-section active">
     <div class="page-content">
         <img src="https://placehold.co/180x180/4F46E5/FFFFFF?text=Nam" alt="Ảnh của Lê Thanh Phương Nam" class="profile-image">
         <h1 class="name">Lê Thanh Phương Nam</h1>
@@ -20,7 +20,7 @@
                 <i class="fas fa-download"></i>
                 Download Resume
             </button>
-            <button class="btn btn-secondary" onclick="document.getElementById('section-contact').scrollIntoView()">
+            <button class="btn btn-secondary" onclick="window.portfolio && window.portfolio.showSection(0)">
                 <i class="fas fa-envelope"></i>
                 Contact Me
             </button>
