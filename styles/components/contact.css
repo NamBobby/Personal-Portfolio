@@ -34,6 +34,11 @@
     border-radius: 2px;
 }
 
+.contact-form .form-group:focus-within{
+    outline: none; 
+}
+
+
 /* Contact Items */
 .contact-item {
     display: flex;
@@ -176,7 +181,6 @@
     border-radius: var(--radius-lg);
     font-size: var(--font-size-base);
     transition: all var(--transition-normal);
-    background: var(--background-light);
     font-family: inherit;
     resize: vertical;
 }

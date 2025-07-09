@@ -1,3 +1,4 @@
+<!-- components/contact.html - FINAL VERSION for Formspree -->
 <div id="section-contact" class="content-section">
     <h2 class="section-title">
         <i class="fas fa-envelope"></i>
@@ -6,23 +7,64 @@
     <div class="contact-container">
         <div class="contact-form">
             <h3>Send Message</h3>
-            <form>
+            <form id="contact-form" class="contact-form-element">
                 <div class="form-group">
-                    <input type="text" placeholder="Your Name" required>
+                    <input 
+                        type="text" 
+                        name="name"
+                        id="contact-name"
+                        placeholder="Your Name" 
+                        required
+                        minlength="2"
+                        maxlength="50"
+                        autocomplete="name"
+                    >
                 </div>
+                
                 <div class="form-group">
-                    <input type="email" placeholder="Your Email" required>
+                    <input 
+                        type="email" 
+                        name="email"
+                        id="contact-email"
+                        placeholder="Your Email" 
+                        required
+                        maxlength="100"
+                        autocomplete="email"
+                    >
                 </div>
+                
                 <div class="form-group">
-                    <input type="text" placeholder="Subject">
+                    <input 
+                        type="text" 
+                        name="subject"
+                        id="contact-subject"
+                        placeholder="Subject"
+                        maxlength="100"
+                        autocomplete="off"
+                    >
                 </div>
+                
                 <div class="form-group">
-                    <textarea placeholder="Your message..." rows="5" required></textarea>
+                    <textarea 
+                        name="message"
+                        id="contact-message"
+                        placeholder="Your message..." 
+                        rows="5" 
+                        required
+                        minlength="10"
+                        maxlength="1000"
+                    ></textarea>
+                    <div class="char-counter">
+                        <span id="char-count">0</span>/1000
+                    </div>
                 </div>
+                
                 <button type="submit" class="submit-btn">
                     <i class="fas fa-paper-plane"></i>
                     Send Message
                 </button>
             </form>
+        </div>
+        </div>
     </div>
 </div>
