@@ -1,4 +1,4 @@
-// Portfolio Book Core Class - FIXED VERSION
+// Portfolio Book Core Class - ENHANCED VERSION with Skills Navigation
 class PortfolioBook {
     constructor() {
         this.currentPageIndex = 0;
@@ -344,7 +344,6 @@ class PortfolioBook {
         });
     }
 
-
     // Lazy loading for images
     initLazyLoading() {
         const images = document.querySelectorAll('img[data-src]');
@@ -383,15 +382,49 @@ class PortfolioBook {
         return timer;
     }
 
-    // Public method to show specific section (for external calls)
+    // ENHANCED: Public method to show specific section with better logic
     goToSection(sectionName) {
+        console.log('🎯 Navigating to section:', sectionName);
+        
+        // Find the section index
         const leftIndex = this.leftSections.indexOf(sectionName);
         const rightIndex = this.rightSections.indexOf(sectionName);
-        const index = leftIndex !== -1 ? leftIndex : rightIndex;
-
-        if (index !== -1) {
-            this.showSection(index);
+        
+        let targetIndex = -1;
+        
+        if (leftIndex !== -1) {
+            targetIndex = leftIndex;
+        } else if (rightIndex !== -1) {
+            targetIndex = rightIndex;
         }
+        
+        if (targetIndex !== -1) {
+            console.log('📍 Found section at index:', targetIndex);
+            this.showSection(targetIndex);
+            
+            // ENHANCED: Scroll to top of target section after navigation
+            setTimeout(() => {
+                const targetElement = document.getElementById(sectionName);
+                if (targetElement) {
+                    targetElement.scrollTop = 0;
+                }
+            }, 700); // Wait for animation to complete
+            
+            return true;
+        } else {
+            console.warn('❌ Section not found:', sectionName);
+            return false;
+        }
+    }
+
+    // ENHANCED: Navigate to Skills section specifically
+    goToSkills() {
+        return this.goToSection('section-skills');
+    }
+
+    // ENHANCED: Navigate to Portfolio section specifically
+    goToPortfolio() {
+        return this.goToSection('section-portfolio');
     }
 
     // Get current section info
@@ -415,6 +448,31 @@ class PortfolioBook {
     // Progress calculation
     getProgress() {
         return ((this.currentPageIndex + 1) / this.leftSections.length) * 100;
+    }
+
+    // ENHANCED: Get section names for easier navigation
+    getSectionNames() {
+        return {
+            left: [...this.leftSections],
+            right: [...this.rightSections],
+            all: [...this.leftSections, ...this.rightSections]
+        };
+    }
+
+    // ENHANCED: Check if a section exists
+    sectionExists(sectionName) {
+        return this.leftSections.includes(sectionName) || 
+               this.rightSections.includes(sectionName);
+    }
+
+    // ENHANCED: Get section position (left/right)
+    getSectionPosition(sectionName) {
+        if (this.leftSections.includes(sectionName)) {
+            return 'left';
+        } else if (this.rightSections.includes(sectionName)) {
+            return 'right';
+        }
+        return null;
     }
 
     // Destroy method for cleanup
