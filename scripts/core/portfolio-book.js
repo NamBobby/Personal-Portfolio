@@ -1,8 +1,8 @@
-// Portfolio Book Core Class
+// Portfolio Book Core Class - FIXED VERSION
 class PortfolioBook {
     constructor() {
         this.currentPageIndex = 0;
-        // FIXED: Ensure all 6 sections are properly mapped
+        // FIXED: Ensure all sections are properly mapped
         this.leftSections = [
             'profile-page',
             'section-education', 
@@ -18,7 +18,36 @@ class PortfolioBook {
         this.animationController = new AnimationController();
         this.navigationController = new NavigationController(this);
         
-        this.init();
+        // Wait for components to load before initializing
+        this.waitForComponents();
+    }
+
+    // FIXED: Wait for all components to load before initializing
+    waitForComponents() {
+        // Check if components are loaded
+        const checkComponents = () => {
+            const allSectionsLoaded = [
+                ...this.leftSections,
+                ...this.rightSections
+            ].every(sectionId => document.getElementById(sectionId));
+
+            if (allSectionsLoaded) {
+                console.log('✅ All components loaded, initializing...');
+                this.init();
+            } else {
+                console.log('⏳ Waiting for components to load...');
+                setTimeout(checkComponents, 100);
+            }
+        };
+
+        // Listen for component loaded events
+        document.addEventListener('allComponentsLoaded', () => {
+            console.log('📦 All components loaded event received');
+            setTimeout(checkComponents, 100);
+        });
+
+        // Start checking immediately
+        checkComponents();
     }
 
     init() {
@@ -30,7 +59,24 @@ class PortfolioBook {
         // Initialize modules
         this.initializeModules();
         
-        console.log('PortfolioBook initialized successfully');
+        console.log('✅ PortfolioBook initialized successfully');
+        console.log('Left sections:', this.leftSections);
+        console.log('Right sections:', this.rightSections);
+        this.debugSections();
+    }
+
+    // FIXED: Debug method to check sections
+    debugSections() {
+        console.log('=== DEBUG SECTIONS ===');
+        this.leftSections.forEach((sectionId, index) => {
+            const element = document.getElementById(sectionId);
+            console.log(`Left ${index}: ${sectionId} - ${element ? '✅ FOUND' : '❌ NOT FOUND'}`);
+        });
+        
+        this.rightSections.forEach((sectionId, index) => {
+            const element = document.getElementById(sectionId);
+            console.log(`Right ${index}: ${sectionId} - ${element ? '✅ FOUND' : '❌ NOT FOUND'}`);
+        });
     }
 
     initializeModules() {
@@ -67,39 +113,82 @@ class PortfolioBook {
     }
 
     showSection(index) {
+        console.log(`🔄 Showing section ${index}`);
+        
         if (this.isAnimating || index < 0 || index >= this.leftSections.length) {
+            console.log('❌ Animation blocked or invalid index');
             return;
         }
         
         this.isAnimating = true;
         
-        // Hide current sections with fade out
-        this.animationController.fadeOutSections(
-            '.left-page .content-section.active',
-            '.right-page .content-section.active'
-        ).then(() => {
+        // FIXED: Properly hide current sections
+        this.hideCurrentSections().then(() => {
             this.showNewSection(index);
         });
     }
 
+    // FIXED: Properly hide current sections
+    hideCurrentSections() {
+        return new Promise((resolve) => {
+            const activeElements = document.querySelectorAll('.content-section.active');
+            
+            activeElements.forEach(element => {
+                element.classList.remove('active');
+                element.classList.add('fade-out');
+                
+                // Clear any conflicting inline styles
+                element.style.opacity = '';
+                element.style.transform = '';
+                element.style.display = '';
+            });
+            
+            setTimeout(resolve, 300);
+        });
+    }
+
     showNewSection(index) {
-        // Remove active class from current sections
-        document.querySelectorAll('.content-section.active').forEach(section => {
-            section.classList.remove('active');
+        console.log(`✨ Showing new section ${index}`);
+        
+        // Remove all animation classes from all sections
+        document.querySelectorAll('.content-section').forEach(section => {
+            section.classList.remove('active', 'fade-out', 'slide-in-left', 'slide-in-right');
+            
+            // FIXED: Clear any inline styles that might interfere
+            section.style.opacity = '';
+            section.style.transform = '';
+            section.style.display = '';
         });
         
         // Show new sections
         const newLeftSection = document.getElementById(this.leftSections[index]);
         const newRightSection = document.getElementById(this.rightSections[index]);
         
+        console.log('Left section:', this.leftSections[index], newLeftSection ? '✅ FOUND' : '❌ NOT FOUND');
+        console.log('Right section:', this.rightSections[index], newRightSection ? '✅ FOUND' : '❌ NOT FOUND');
+        
         if (newLeftSection) {
-            this.animationController.slideInFromRight(newLeftSection);
+            // FIXED: Use CSS classes for animation
+            newLeftSection.classList.add('active');
+            newLeftSection.classList.add('slide-in-right');
             newLeftSection.scrollTop = 0;
+            
+            // Remove animation class after animation completes
+            setTimeout(() => {
+                newLeftSection.classList.remove('slide-in-right');
+            }, 600);
         }
         
         if (newRightSection) {
-            this.animationController.slideInFromLeft(newRightSection);
+            // FIXED: Use CSS classes for animation
+            newRightSection.classList.add('active');
+            newRightSection.classList.add('slide-in-left');
             newRightSection.scrollTop = 0;
+            
+            // Remove animation class after animation completes
+            setTimeout(() => {
+                newRightSection.classList.remove('slide-in-left');
+            }, 600);
         }
         
         this.currentPageIndex = index;
@@ -112,6 +201,7 @@ class PortfolioBook {
         
         setTimeout(() => {
             this.isAnimating = false;
+            console.log('✅ Animation completed');
         }, 600);
         
         // Emit page change event
@@ -129,34 +219,79 @@ class PortfolioBook {
                     if (this.skillBars) {
                         this.skillBars.animate();
                     }
-                    this.animationController.animateSkillBars();
+                    this.animateSkillBars();
                 }, 500);
                 break;
             case 'section-portfolio':
                 setTimeout(() => {
-                    this.animationController.animatePortfolioCards();
+                    this.animatePortfolioCards();
                 }, 300);
                 break;
             case 'section-experience':
                 setTimeout(() => {
-                    this.animationController.animateTimeline();
+                    this.animateTimeline();
                 }, 400);
                 break;
             case 'section-education':
                 setTimeout(() => {
-                    this.animationController.animateEducationCards();
+                    this.animateEducationCards();
                 }, 300);
                 break;
         }
     }
 
+    // FIXED: Animate skill bars using CSS
+    animateSkillBars() {
+        const skillBars = document.querySelectorAll('.skill-bar');
+        skillBars.forEach((bar, index) => {
+            const level = bar.getAttribute('data-level');
+            if (level) {
+                setTimeout(() => {
+                    bar.style.width = level + '%';
+                }, index * 100);
+            }
+        });
+    }
+
+    animatePortfolioCards() {
+        const portfolioCards = document.querySelectorAll('.portfolio-card');
+        portfolioCards.forEach((card, index) => {
+            card.classList.remove('animate');
+            setTimeout(() => {
+                card.classList.add('animate');
+            }, index * 150);
+        });
+    }
+
+    animateTimeline() {
+        const timelineItems = document.querySelectorAll('.timeline-item');
+        timelineItems.forEach((item, index) => {
+            item.classList.remove('animate');
+            setTimeout(() => {
+                item.classList.add('animate');
+            }, index * 200);
+        });
+    }
+
+    animateEducationCards() {
+        const educationCards = document.querySelectorAll('.education-card');
+        educationCards.forEach((card, index) => {
+            card.classList.remove('animate');
+            setTimeout(() => {
+                card.classList.add('animate');
+            }, index * 200);
+        });
+    }
+
     previousPage() {
+        console.log('⬅️ Previous page clicked, current:', this.currentPageIndex);
         if (this.currentPageIndex > 0) {
             this.showSection(this.currentPageIndex - 1);
         }
     }
 
     nextPage() {
+        console.log('➡️ Next page clicked, current:', this.currentPageIndex);
         if (this.currentPageIndex < this.leftSections.length - 1) {
             this.showSection(this.currentPageIndex + 1);
         }

@@ -1,4 +1,4 @@
-/* Book Container Styles */
+/* Book Container Styles - FIXED VERSION */
 
 /* Book Wrapper */
 .book-wrapper {
@@ -86,9 +86,9 @@
     overflow-y: auto; /* Allow scrolling within page content */
 }
 
-/* Content Sections - FIXED HEIGHT AND SCROLL */
+/* FIXED: Content Sections with proper display and animation */
 .content-section {
-    display: none;
+    display: none !important;
     opacity: 0;
     transform: translateY(20px);
     transition: all var(--transition-slow);
@@ -99,10 +99,49 @@
     box-sizing: border-box; /* Include padding in height calculation */
 }
 
+/* FIXED: Active state with !important to override inline styles */
 .content-section.active {
-    display: block;
-    opacity: 1;
-    transform: translateY(0);
+    display: block !important;
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+}
+
+/* FIXED: Animation classes that work with CSS transitions */
+.content-section.fade-out {
+    opacity: 0 !important;
+    transform: translateX(-30px) !important;
+    transition: all 0.3s ease !important;
+}
+
+.content-section.slide-in-right {
+    animation: slideInFromRight 0.6s ease-out forwards !important;
+}
+
+.content-section.slide-in-left {
+    animation: slideInFromLeft 0.6s ease-out forwards !important;
+}
+
+/* FIXED: Keyframe animations */
+@keyframes slideInFromRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInFromLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
 }
 
 /* Custom Scrollbar for both pages */

@@ -1,4 +1,4 @@
-// Component Loader for Portfolio
+// Component Loader for Portfolio - FIXED VERSION with DEBUG
 class ComponentLoader {
     constructor() {
         this.loadedComponents = new Set();
@@ -44,7 +44,7 @@ class ComponentLoader {
     async _loadHTMLInternal(containerId, filePath, options = {}) {
         const { showLoader = true, retries = this.retryAttempts } = options;
         
-        console.log(`Loading component: ${filePath}`);
+        console.log(`Loading component: ${filePath} into ${containerId}`);
         
         if (showLoader) {
             this._showComponentLoader(containerId);
@@ -73,9 +73,20 @@ class ComponentLoader {
                     throw new Error(`Container with ID '${containerId}' not found`);
                 }
                 
+                // DEBUG: Log what we're loading
+                console.log(`Loading HTML into ${containerId}:`, html.substring(0, 100) + '...');
+                
                 // Sanitize HTML before insertion
                 const sanitizedHTML = this._sanitizeHTML(html);
                 container.innerHTML = sanitizedHTML;
+                
+                // DEBUG: Check if the content was loaded correctly
+                const loadedElement = container.querySelector('.content-section');
+                if (loadedElement) {
+                    console.log(`✅ Successfully loaded section: ${loadedElement.id}`);
+                } else {
+                    console.warn(`⚠️ No .content-section found in ${containerId}`);
+                }
                 
                 // Process any scripts in the loaded content
                 this._processScripts(container);
@@ -83,12 +94,12 @@ class ComponentLoader {
                 // Emit load event
                 this._emitLoadEvent(containerId, filePath);
                 
-                console.log(`Successfully loaded: ${filePath}`);
+                console.log(`✅ Successfully loaded: ${filePath} into ${containerId}`);
                 return;
                 
             } catch (error) {
                 lastError = error;
-                console.warn(`Attempt ${attempt + 1} failed for ${filePath}:`, error);
+                console.warn(`❌ Attempt ${attempt + 1} failed for ${filePath}:`, error);
                 
                 if (attempt < retries) {
                     await this._delay(this.retryDelay * (attempt + 1));
@@ -107,6 +118,7 @@ class ComponentLoader {
      * @returns {Promise} - Promise that resolves when all components are loaded
      */
     async loadAllComponents(components = null) {
+        // FIXED: Correct container mappings
         const defaultComponents = [
             { containerId: 'profile-section-container', filePath: 'components/profile.html', priority: 1 },
             { containerId: 'navigation-container', filePath: 'components/navigation.html', priority: 1 },
@@ -120,6 +132,7 @@ class ComponentLoader {
         const componentsToLoad = components || defaultComponents;
         
         console.log('Starting to load all components...');
+        console.log('Components to load:', componentsToLoad);
         
         try {
             // Group components by priority
@@ -143,15 +156,35 @@ class ComponentLoader {
                 }
             }
             
-            console.log('All components loaded successfully!');
+            console.log('✅ All components loaded successfully!');
+            
+            // DEBUG: Check what sections are available
+            this._debugLoadedSections();
+            
             this._emitAllComponentsLoadedEvent();
             return true;
             
         } catch (error) {
-            console.error('Error loading components:', error);
+            console.error('❌ Error loading components:', error);
             this._showGlobalErrorMessage(error);
             return false;
         }
+    }
+
+    // DEBUG: Check what sections were loaded
+    _debugLoadedSections() {
+        console.log('=== DEBUG LOADED SECTIONS ===');
+        const allSections = document.querySelectorAll('.content-section');
+        allSections.forEach(section => {
+            console.log(`Section found: ${section.id} in container: ${section.parentElement.id}`);
+        });
+        
+        // Check specific sections
+        const educationSection = document.getElementById('section-education');
+        const skillsSection = document.getElementById('section-skills');
+        
+        console.log('Education section:', educationSection ? '✅ FOUND' : '❌ NOT FOUND');
+        console.log('Skills section:', skillsSection ? '✅ FOUND' : '❌ NOT FOUND');
     }
 
     /**
