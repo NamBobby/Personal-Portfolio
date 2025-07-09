@@ -1,4 +1,4 @@
-/* Book Container Styles - FIXED VERSION */
+/* Book Container Styles - FIXED SCROLLABLE VERSION */
 
 /* Book Wrapper */
 .book-wrapper {
@@ -50,15 +50,13 @@
     z-index: 11;
 }
 
-/* Pages - Side by side layout - FIXED HEIGHT AND OVERFLOW */
+/* FIXED: Pages with proper scroll container */
 .left-page, .right-page {
     width: 50%;
     height: 100%;
     background: var(--background-white);
-    display: flex;
-    flex-direction: column;
-    overflow: hidden; /* Important: prevent page-level scrolling */
     position: relative;
+    overflow: hidden; /* Container itself doesn't scroll */
 }
 
 .left-page {
@@ -74,39 +72,31 @@
     box-shadow: inset 5px 0 15px rgba(0, 0, 0, 0.1);
 }
 
-/* Page Content - FIXED CONTAINER HEIGHT */
-.page-content {
-    padding: 40px;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    position: relative;
-    overflow-y: auto; /* Allow scrolling within page content */
-}
-
-/* FIXED: Content Sections with proper display and animation */
+/* FIXED: Content Sections - Each section scrolls independently */
 .content-section {
     display: none !important;
     opacity: 0;
     transform: translateY(20px);
     transition: all var(--transition-slow);
-    padding: 40px;
-    height: 100%; /* Full height of container */
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     overflow-y: auto; /* Enable vertical scrolling */
     overflow-x: hidden; /* Prevent horizontal scroll */
-    box-sizing: border-box; /* Include padding in height calculation */
+    padding: 40px;
+    box-sizing: border-box;
 }
 
-/* FIXED: Active state with !important to override inline styles */
+/* FIXED: Active state with proper display */
 .content-section.active {
     display: block !important;
     opacity: 1 !important;
     transform: translateY(0) !important;
 }
 
-/* FIXED: Animation classes that work with CSS transitions */
+/* FIXED: Animation classes */
 .content-section.fade-out {
     opacity: 0 !important;
     transform: translateX(-30px) !important;
@@ -121,7 +111,7 @@
     animation: slideInFromLeft 0.6s ease-out forwards !important;
 }
 
-/* FIXED: Keyframe animations */
+/* Keyframe animations */
 @keyframes slideInFromRight {
     from {
         opacity: 0;
@@ -144,38 +134,95 @@
     }
 }
 
-/* Custom Scrollbar for both pages */
+/* FIXED: Custom Scrollbar for each content section */
 .content-section::-webkit-scrollbar {
-    width: 8px;
+    width: 12px;
+    background: transparent;
 }
 
 .content-section::-webkit-scrollbar-track {
-    background: var(--background-light);
+    background: rgba(229, 231, 235, 0.3);
     border-radius: 10px;
+    margin: 20px 0;
 }
 
 .content-section::-webkit-scrollbar-thumb {
-    background: var(--primary-color);
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
     border-radius: 10px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+    transition: all 0.3s ease;
 }
 
 .content-section::-webkit-scrollbar-thumb:hover {
-    background: var(--secondary-color);
+    background: linear-gradient(135deg, var(--secondary-color) 0%, var(--accent-color) 100%);
+    transform: scale(1.1);
 }
 
-/* Ensure page content scrolls properly */
-.page-content::-webkit-scrollbar {
-    width: 8px;
+.content-section::-webkit-scrollbar-thumb:active {
+    background: var(--accent-color);
 }
 
-.page-content::-webkit-scrollbar-track {
-    background: var(--background-light);
-    border-radius: 10px;
+/* FIXED: Scrollbar for left page (different color) */
+.left-page .content-section::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
-.page-content::-webkit-scrollbar-thumb {
-    background: var(--primary-color);
-    border-radius: 10px;
+.left-page .content-section::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+}
+
+/* FIXED: Scrollbar for right page (different color) */
+.right-page .content-section::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
+}
+
+.right-page .content-section::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, var(--accent-color) 0%, var(--primary-color) 100%);
+}
+
+/* FIXED: Scroll indicator (shows when content is scrollable) */
+.content-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(180deg, 
+        rgba(59, 130, 246, 0.2) 0%, 
+        transparent 20%, 
+        transparent 80%, 
+        rgba(59, 130, 246, 0.2) 100%);
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.content-section:hover::before {
+    opacity: 1;
+}
+
+/* FIXED: Add subtle shadow at top and bottom to indicate scrollable content */
+.content-section::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 20px;
+    background: linear-gradient(180deg, 
+        rgba(0, 0, 0, 0.1) 0%, 
+        transparent 100%);
+    z-index: 2;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.content-section:hover::after {
+    opacity: 1;
 }
 
 /* Section Title Styles */
@@ -189,7 +236,7 @@
     gap: 18px;
     position: relative;
     padding-bottom: 15px;
-    flex-shrink: 0; /* Prevent title from shrinking */
+    flex-shrink: 0;
 }
 
 .section-title::after {
@@ -208,205 +255,150 @@
     font-size: 2.2rem;
 }
 
-/* Page Headers for Left Pages */
-.page-header {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    margin-bottom: 30px;
-    padding-bottom: 15px;
-    border-bottom: 2px solid var(--primary-color);
-    flex-shrink: 0; /* Prevent header from shrinking */
-}
-
-.page-icon {
-    font-size: 2rem;
-    color: var(--primary-color);
-    background: var(--background-light);
-    padding: 15px;
-    border-radius: 50%;
-    width: 60px;
-    height: 60px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.page-header h2 {
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: var(--text-dark);
-    margin: 0;
-}
-
-/* FIXED: Contact form container to prevent overflow */
-.contact-container {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 30px;
-    margin-top: 25px;
-    width: 100%;
-    max-width: 100%;
-    overflow: visible;
-}
-
-.contact-form {
-    width: 100%;
-    max-width: 100%;
-}
-
-.contact-form form {
+/* FIXED: Page content wrapper for profile page */
+.page-content {
+    padding: 40px;
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    width: 100%;
-}
-
-/* FIXED: Form elements sizing */
-.form-group {
-    position: relative;
-    width: 100%;
-}
-
-.form-group input,
-.form-group textarea {
-    width: 100%;
-    padding: 15px;
-    border: 2px solid var(--border-color);
-    border-radius: var(--radius-lg);
-    font-size: var(--font-size-base);
-    transition: all var(--transition-normal);
-    background: var(--background-light);
-    font-family: inherit;
-    resize: vertical;
-    box-sizing: border-box;
-}
-
-/* FIXED: Submit button positioning */
-.submit-btn {
-    background: var(--gradient-primary);
-    color: white;
-    border: none;
-    padding: 15px 30px;
-    border-radius: var(--radius-full);
-    font-size: var(--font-size-lg);
-    font-weight: 700;
-    cursor: pointer;
-    transition: all var(--transition-normal);
-    display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 10px;
-    position: relative;
-    overflow: hidden;
-    width: 100%;
-    margin-top: 10px;
-}
-
-.submit-btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-    transition: left 0.5s ease;
-}
-
-.submit-btn:hover::before {
-    left: 100%;
-}
-
-.submit-btn:hover {
-    transform: translateY(-3px);
-    box-shadow: var(--shadow-medium);
-}
-
-.submit-btn:disabled {
-    opacity: 0.7;
-    cursor: not-allowed;
-    transform: none;
-}
-
-/* Book Cover Styles */
-.book-cover {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: var(--gradient-primary);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-    transition: all var(--transition-slow);
-}
-
-.book-cover.hidden {
-    opacity: 0;
-    visibility: hidden;
-    transform: scale(0.8);
-}
-
-.cover-content {
     text-align: center;
-    color: white;
-    animation: fadeInUp 1s ease-out;
+    min-height: 100%;
+    justify-content: center;
 }
 
-.cover-content h1 {
-    font-size: 4rem;
-    font-weight: 800;
+/* FIXED: Ensure content sections have proper spacing */
+.content-section > * {
     margin-bottom: 1rem;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-    background: linear-gradient(45deg, #fff, #e0e7ff);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
 }
 
-.cover-content h2 {
-    font-size: 2.2rem;
-    font-weight: 600;
-    margin-bottom: 0.8rem;
-    opacity: 0.95;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+.content-section > *:last-child {
+    margin-bottom: 0;
 }
 
-.cover-content p {
-    font-size: 1.3rem;
-    margin-bottom: 2.5rem;
-    opacity: 0.85;
-    font-weight: 400;
+/* FIXED: Add padding to bottom of scrollable content */
+.content-section > .education-grid,
+.content-section > .skills-categories,
+.content-section > .timeline,
+.content-section > .portfolio-grid,
+.content-section > .contact-container {
+    padding-bottom: 40px;
 }
 
-.open-book-btn {
-    background: rgba(255, 255, 255, 0.25);
-    border: 2px solid rgba(255, 255, 255, 0.4);
-    color: white;
-    padding: 18px 35px;
-    border-radius: 50px;
-    font-size: 1.2rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.4s ease;
-    backdrop-filter: blur(15px);
-    text-transform: uppercase;
-    letter-spacing: 1px;
+/* FIXED: Improve scrolling performance */
+.content-section {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+    will-change: scroll-position;
 }
 
-.open-book-btn:hover {
-    background: rgba(255, 255, 255, 0.35);
-    transform: translateY(-3px) scale(1.05);
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
-    border-color: rgba(255, 255, 255, 0.6);
+/* FIXED: Scroll indicators for mobile */
+@media (max-width: 768px) {
+    .content-section::-webkit-scrollbar {
+        width: 8px;
+    }
+    
+    .content-section::-webkit-scrollbar-track {
+        background: rgba(229, 231, 235, 0.5);
+        margin: 10px 0;
+    }
+    
+    .content-section::-webkit-scrollbar-thumb {
+        background: var(--primary-color);
+        border-radius: 6px;
+    }
 }
 
-.open-book-btn i {
-    margin-right: 12px;
-    font-size: 1.1em;
+/* FIXED: Focus styles for accessibility */
+.content-section:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: -2px;
+}
+
+/* FIXED: Ensure smooth scrolling on all elements */
+html {
+    scroll-behavior: smooth;
+}
+
+.content-section * {
+    scroll-behavior: smooth;
+}
+
+/* FIXED: Add scroll snap for better UX */
+.content-section {
+    scroll-snap-type: y proximity;
+}
+
+.content-section > .section-title,
+.content-section > .education-card,
+.content-section > .skill-category,
+.content-section > .timeline-item,
+.content-section > .portfolio-card {
+    scroll-snap-align: start;
+}
+
+/* FIXED: Scrollbar styles for different themes */
+@media (prefers-color-scheme: dark) {
+    .content-section::-webkit-scrollbar-track {
+        background: rgba(75, 85, 99, 0.3);
+    }
+    
+    .content-section::-webkit-scrollbar-thumb {
+        background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+    }
+}
+
+/* FIXED: Print styles - remove scroll behaviors */
+@media print {
+    .content-section {
+        position: static !important;
+        height: auto !important;
+        overflow: visible !important;
+        padding: 20px !important;
+    }
+    
+    .content-section::-webkit-scrollbar {
+        display: none !important;
+    }
+}
+
+/* FIXED: Reduced motion accessibility */
+@media (prefers-reduced-motion: reduce) {
+    .content-section {
+        scroll-behavior: auto;
+    }
+    
+    .content-section::-webkit-scrollbar-thumb {
+        transition: none;
+    }
+}
+
+/* FIXED: High contrast mode */
+@media (prefers-contrast: high) {
+    .content-section::-webkit-scrollbar-thumb {
+        background: currentColor;
+        border: 2px solid white;
+    }
+}
+
+/* FIXED: Custom scrollbar for Firefox */
+.content-section {
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary-color) transparent;
+}
+
+/* FIXED: Hover effects for scrollable content */
+.content-section:hover {
+    scrollbar-color: var(--secondary-color) rgba(229, 231, 235, 0.5);
+}
+
+/* FIXED: Ensure content is not cut off */
+.content-section {
+    padding-bottom: 60px; /* Extra padding at bottom */
+}
+
+/* FIXED: Smooth scroll restoration */
+.content-section {
+    scroll-padding-top: 80px; /* Account for sticky title */
 }
 
 /* RESPONSIVE FIXES */
@@ -434,27 +426,19 @@
         box-shadow: inset 0 5px 15px rgba(0, 0, 0, 0.1);
     }
 
-    .page-content {
-        padding: 20px;
-    }
-
     .content-section {
         padding: 20px;
+        padding-bottom: 40px;
     }
 
     .section-title {
         font-size: 1.8rem;
         margin-bottom: 20px;
+        padding-top: 10px;
     }
 
-    .form-group input,
-    .form-group textarea {
-        padding: 12px;
-    }
-
-    .submit-btn {
-        padding: 12px 25px;
-        font-size: var(--font-size-base);
+    .page-content {
+        padding: 20px;
     }
 }
 
@@ -464,12 +448,9 @@
         height: 500px;
     }
 
-    .page-content {
-        padding: 15px;
-    }
-
     .content-section {
         padding: 15px;
+        padding-bottom: 30px;
     }
 
     .section-title {
@@ -478,16 +459,40 @@
         text-align: center;
         gap: 8px;
         margin-bottom: 15px;
+        padding-top: 5px;
     }
 
-    .form-group input,
-    .form-group textarea {
-        padding: 10px;
-        font-size: var(--font-size-sm);
+    .page-content {
+        padding: 15px;
     }
+}
 
-    .submit-btn {
-        padding: 10px 20px;
-        font-size: var(--font-size-sm);
+/* FIXED: Ensure scrollbar is always visible when needed */
+.content-section::-webkit-scrollbar {
+    -webkit-appearance: none;
+}
+
+.content-section::-webkit-scrollbar:horizontal {
+    height: 12px;
+}
+
+.content-section::-webkit-scrollbar:vertical {
+    width: 12px;
+}
+
+/* FIXED: Add subtle animation when scrolling */
+@keyframes scrollIndicator {
+    0% {
+        opacity: 0;
     }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+.content-section::-webkit-scrollbar-thumb:active {
+    animation: scrollIndicator 0.3s ease;
 }

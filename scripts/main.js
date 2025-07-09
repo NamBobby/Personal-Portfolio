@@ -1,8 +1,9 @@
-// Main Application Entry Point
+// Main Application Entry Point - Updated with ScrollManager
 class PortfolioApp {
     constructor() {
         this.componentLoader = null;
         this.portfolioBook = null;
+        this.scrollManager = null;
         this.isInitialized = false;
         this.config = {
             enableAnalytics: false,
@@ -26,6 +27,9 @@ class PortfolioApp {
             
             // Load all components
             await this.loadComponents();
+            
+            // Initialize scroll manager
+            this.initializeScrollManager();
             
             // Initialize portfolio book
             await this.initializePortfolio();
@@ -86,6 +90,48 @@ class PortfolioApp {
         }
     }
 
+    // FIXED: Initialize ScrollManager after components are loaded
+    initializeScrollManager() {
+        if (typeof ScrollManager !== 'undefined') {
+            this.scrollManager = new ScrollManager();
+            console.log('✅ ScrollManager initialized');
+        } else {
+            console.warn('⚠️ ScrollManager class not found, loading separately...');
+            // Fallback: create a basic scroll manager
+            this.createBasicScrollManager();
+        }
+    }
+
+    // Fallback scroll manager
+    createBasicScrollManager() {
+        this.scrollManager = {
+            scrollToSection: (sectionId, position = 'top') => {
+                const section = document.getElementById(sectionId);
+                if (!section) return;
+                
+                let scrollTarget = 0;
+                switch(position) {
+                    case 'top': scrollTarget = 0; break;
+                    case 'bottom': scrollTarget = section.scrollHeight; break;
+                    case 'center': scrollTarget = (section.scrollHeight - section.clientHeight) / 2; break;
+                    default: scrollTarget = position;
+                }
+                
+                section.scrollTo({
+                    top: scrollTarget,
+                    behavior: 'smooth'
+                });
+            },
+            
+            resetScrollPosition: (sectionId) => {
+                const section = document.getElementById(sectionId);
+                if (section) {
+                    section.scrollTop = 0;
+                }
+            }
+        };
+    }
+
     async initializePortfolio() {
         // Wait a bit for DOM to settle
         await this.delay(100);
@@ -98,13 +144,45 @@ class PortfolioApp {
         // Initialize portfolio
         this.portfolioBook = new PortfolioBook();
         
+        // FIXED: Integrate ScrollManager with PortfolioBook
+        this.integrateScrollManager();
+        
         // Make globally accessible for debugging
         if (this.config.debugMode) {
             window.portfolio = this.portfolioBook;
             window.portfolioApp = this;
+            window.scrollManager = this.scrollManager;
         }
         
         console.log('Portfolio Book initialized');
+    }
+
+    // FIXED: Integrate ScrollManager with PortfolioBook
+    integrateScrollManager() {
+        if (!this.scrollManager || !this.portfolioBook) return;
+        
+        // Listen for page changes to reset scroll positions
+        document.addEventListener('page:changed', (e) => {
+            const { leftSection, rightSection } = e.detail;
+            
+            // Reset scroll positions for new sections
+            setTimeout(() => {
+                this.scrollManager.resetScrollPosition(leftSection);
+                this.scrollManager.resetScrollPosition(rightSection);
+            }, 100);
+        });
+        
+        // Add scroll to top functionality
+        this.portfolioBook.scrollToTop = (sectionId) => {
+            this.scrollManager.scrollToSection(sectionId, 'top');
+        };
+        
+        // Add scroll to bottom functionality
+        this.portfolioBook.scrollToBottom = (sectionId) => {
+            this.scrollManager.scrollToSection(sectionId, 'bottom');
+        };
+        
+        console.log('✅ ScrollManager integrated with PortfolioBook');
     }
 
     setupAdditionalFeatures() {
@@ -127,7 +205,59 @@ class PortfolioApp {
         // Setup resize handling
         this.setupResizeHandling();
         
+        // FIXED: Setup scroll shortcuts
+        this.setupScrollShortcuts();
+        
         console.log('Additional features setup complete');
+    }
+
+    // FIXED: Setup scroll-related keyboard shortcuts
+    setupScrollShortcuts() {
+        document.addEventListener('keydown', (e) => {
+            // Don't interfere with form inputs
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+                return;
+            }
+
+            // Get current active section
+            const activeSection = document.querySelector('.content-section.active');
+            if (!activeSection) return;
+
+            switch(e.key) {
+                case 'Home':
+                    if (e.ctrlKey || e.metaKey) {
+                        e.preventDefault();
+                        this.scrollManager.scrollToSection(activeSection.id, 'top');
+                    }
+                    break;
+                case 'End':
+                    if (e.ctrlKey || e.metaKey) {
+                        e.preventDefault();
+                        this.scrollManager.scrollToSection(activeSection.id, 'bottom');
+                    }
+                    break;
+                case 'PageUp':
+                    e.preventDefault();
+                    activeSection.scrollBy(0, -activeSection.clientHeight * 0.8);
+                    break;
+                case 'PageDown':
+                    e.preventDefault();
+                    activeSection.scrollBy(0, activeSection.clientHeight * 0.8);
+                    break;
+                case 'ArrowUp':
+                    if (e.ctrlKey || e.metaKey) {
+                        e.preventDefault();
+                        activeSection.scrollBy(0, -50);
+                    }
+                    break;
+                case 'ArrowDown':
+                    if (e.ctrlKey || e.metaKey) {
+                        e.preventDefault();
+                        activeSection.scrollBy(0, 50);
+                    }
+                    break;
+            }
+        });
     }
 
     setupErrorHandling() {
@@ -175,7 +305,7 @@ class PortfolioApp {
             switch (event.key) {
                 case 'h':
                 case 'Home':
-                    if (this.portfolioBook) {
+                    if (this.portfolioBook && !event.ctrlKey && !event.metaKey) {
                         this.portfolioBook.showSection(0);
                     }
                     break;
@@ -336,6 +466,10 @@ class PortfolioApp {
             this.componentLoader.destroy();
         }
         
+        if (this.scrollManager && typeof this.scrollManager.destroy === 'function') {
+            this.scrollManager.destroy();
+        }
+        
         // Clear any overlays
         this.closeAllOverlays();
         
@@ -376,8 +510,22 @@ class PortfolioApp {
             initialized: this.isInitialized,
             componentsLoaded: this.componentLoader?.getLoadedComponents().length || 0,
             currentPage: this.portfolioBook?.getCurrentSection() || null,
+            scrollManagerActive: !!this.scrollManager,
             config: this.config
         };
+    }
+
+    // Public scroll methods
+    scrollToSection(sectionId, position = 'top') {
+        if (this.scrollManager) {
+            this.scrollManager.scrollToSection(sectionId, position);
+        }
+    }
+
+    resetScrollPositions() {
+        if (this.scrollManager) {
+            this.scrollManager.resetAllScrollPositions();
+        }
     }
 }
 
@@ -393,3 +541,16 @@ window.addEventListener('beforeunload', () => {
         console.log('Cleaning up before page unload');
     }
 });
+
+// Add global scroll utilities
+window.scrollToTop = (sectionId) => {
+    if (window.portfolioApp) {
+        window.portfolioApp.scrollToSection(sectionId, 'top');
+    }
+};
+
+window.scrollToBottom = (sectionId) => {
+    if (window.portfolioApp) {
+        window.portfolioApp.scrollToSection(sectionId, 'bottom');
+    }
+};
