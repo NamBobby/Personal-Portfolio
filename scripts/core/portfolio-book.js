@@ -2,6 +2,7 @@
 class PortfolioBook {
     constructor() {
         this.currentPageIndex = 0;
+        // FIXED: Ensure all 6 sections are properly mapped
         this.leftSections = [
             'profile-page',
             'section-education', 
@@ -106,6 +107,7 @@ class PortfolioBook {
         this.updatePageIndicator();
         
         // Trigger section-specific animations
+        this.triggerSectionAnimations(this.leftSections[index]);
         this.triggerSectionAnimations(this.rightSections[index]);
         
         setTimeout(() => {

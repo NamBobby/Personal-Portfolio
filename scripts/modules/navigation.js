@@ -16,7 +16,7 @@ class NavigationController {
         this.bindNavigationEvents();
         this.bindKeyboardEvents();
         this.bindTouchEvents();
-        this.bindMouseEvents();
+        // Removed mouse wheel navigation
         this.updateNavigationState();
         
         console.log('NavigationController initialized');
@@ -143,41 +143,7 @@ class NavigationController {
         }, { passive: true });
     }
 
-    bindMouseEvents() {
-        const bookContainer = document.querySelector('.book-container');
-        if (!bookContainer) return;
-
-        // Mouse wheel navigation
-        bookContainer.addEventListener('wheel', PortfolioHelpers.throttle((e) => {
-            if (this.isNavigating) return;
-
-            e.preventDefault();
-            
-            if (e.deltaY > 0) {
-                this.nextPage();
-            } else {
-                this.previousPage();
-            }
-        }, 500), { passive: false });
-
-        // Click navigation on book edges
-        bookContainer.addEventListener('click', (e) => {
-            if (this.isNavigating) return;
-
-            const rect = bookContainer.getBoundingClientRect();
-            const clickX = e.clientX - rect.left;
-            const containerWidth = rect.width;
-            
-            // Click on left 20% = previous page
-            if (clickX < containerWidth * 0.2) {
-                this.previousPage();
-            }
-            // Click on right 20% = next page
-            else if (clickX > containerWidth * 0.8) {
-                this.nextPage();
-            }
-        });
-    }
+    // REMOVED MOUSE WHEEL NAVIGATION to fix auto-scroll issue
 
     previousPage() {
         if (this.isNavigating || this.currentIndex <= 0) return;
@@ -245,8 +211,11 @@ class NavigationController {
             prevButton.classList.toggle('disabled', isDisabled);
             prevButton.style.opacity = isDisabled ? '0.5' : '1';
             
-            // Update button text/icon based on current page
-            this.updateButtonContent(prevButton, 'previous');
+            // Simple button text
+            const span = prevButton.querySelector('span');
+            if (span) {
+                span.textContent = 'Previous Page';
+            }
         }
         
         if (nextButton) {
@@ -255,27 +224,11 @@ class NavigationController {
             nextButton.classList.toggle('disabled', isDisabled);
             nextButton.style.opacity = isDisabled ? '0.5' : '1';
             
-            // Update button text/icon based on current page
-            this.updateButtonContent(nextButton, 'next');
-        }
-    }
-
-    updateButtonContent(button, direction) {
-        if (!button) return;
-
-        const pageNames = [
-            'Profile',
-            'Education',
-            'Skills'
-        ];
-
-        const currentPageName = pageNames[this.currentIndex] || 'Page';
-        const targetIndex = direction === 'next' ? this.currentIndex + 1 : this.currentIndex - 1;
-        const targetPageName = pageNames[targetIndex] || 'Page';
-
-        const span = button.querySelector('span');
-        if (span && targetIndex >= 0 && targetIndex < this.getTotalPages()) {
-            span.textContent = targetPageName;
+            // Simple button text
+            const span = nextButton.querySelector('span');
+            if (span) {
+                span.textContent = 'Next Page';
+            }
         }
     }
 
