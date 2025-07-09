@@ -89,7 +89,7 @@
 }
 
 .portfolio-overlay .overlay-content a {
-  background: #007bff;
+  background: #FEAE06;
   color: white;
   border-radius: 50%;
   width: 40px;
@@ -101,7 +101,7 @@
 }
 
 .portfolio-overlay .overlay-content a:hover {
-  background: #0056b3;
+  background: #FBD481;
 }
 
 
