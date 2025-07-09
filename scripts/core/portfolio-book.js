@@ -5,7 +5,7 @@ class PortfolioBook {
         // FIXED: Ensure all sections are properly mapped
         this.leftSections = [
             'profile-page',
-            'section-education', 
+            'section-education',
             'section-skills'
         ];
         this.rightSections = [
@@ -17,7 +17,7 @@ class PortfolioBook {
         this.eventManager = new EventManager();
         this.animationController = new AnimationController();
         this.navigationController = new NavigationController(this);
-        
+
         // Wait for components to load before initializing
         this.waitForComponents();
     }
@@ -55,10 +55,10 @@ class PortfolioBook {
         this.updateNavButtons();
         this.updatePageIndicator();
         this.showSection(0);
-        
+
         // Initialize modules
         this.initializeModules();
-        
+
         console.log('✅ PortfolioBook initialized successfully');
         console.log('Left sections:', this.leftSections);
         console.log('Right sections:', this.rightSections);
@@ -72,7 +72,7 @@ class PortfolioBook {
             const element = document.getElementById(sectionId);
             console.log(`Left ${index}: ${sectionId} - ${element ? '✅ FOUND' : '❌ NOT FOUND'}`);
         });
-        
+
         this.rightSections.forEach((sectionId, index) => {
             const element = document.getElementById(sectionId);
             console.log(`Right ${index}: ${sectionId} - ${element ? '✅ FOUND' : '❌ NOT FOUND'}`);
@@ -84,12 +84,12 @@ class PortfolioBook {
         if (typeof SkillBarsModule !== 'undefined') {
             this.skillBars = new SkillBarsModule();
         }
-        
+
         // Initialize form handler
         if (typeof FormHandler !== 'undefined') {
             this.formHandler = new FormHandler();
         }
-        
+
         // Initialize other modules as needed
         this.initSmoothScrolling();
         this.initLazyLoading();
@@ -99,11 +99,11 @@ class PortfolioBook {
         this.eventManager.on('navigation:prev', () => this.previousPage());
         this.eventManager.on('navigation:next', () => this.nextPage());
         this.eventManager.on('navigation:goto', (index) => this.showSection(index));
-        
+
         // Keyboard navigation
         document.addEventListener('keydown', (e) => {
             if (this.isAnimating) return;
-            
+
             if (e.key === 'ArrowLeft') {
                 this.previousPage();
             } else if (e.key === 'ArrowRight') {
@@ -114,14 +114,14 @@ class PortfolioBook {
 
     showSection(index) {
         console.log(`🔄 Showing section ${index}`);
-        
+
         if (this.isAnimating || index < 0 || index >= this.leftSections.length) {
             console.log('❌ Animation blocked or invalid index');
             return;
         }
-        
+
         this.isAnimating = true;
-        
+
         // FIXED: Properly hide current sections
         this.hideCurrentSections().then(() => {
             this.showNewSection(index);
@@ -132,78 +132,78 @@ class PortfolioBook {
     hideCurrentSections() {
         return new Promise((resolve) => {
             const activeElements = document.querySelectorAll('.content-section.active');
-            
+
             activeElements.forEach(element => {
                 element.classList.remove('active');
                 element.classList.add('fade-out');
-                
+
                 // Clear any conflicting inline styles
                 element.style.opacity = '';
                 element.style.transform = '';
                 element.style.display = '';
             });
-            
+
             setTimeout(resolve, 300);
         });
     }
 
     showNewSection(index) {
         console.log(`✨ Showing new section ${index}`);
-        
+
         // Remove all animation classes from all sections
         document.querySelectorAll('.content-section').forEach(section => {
             section.classList.remove('active', 'fade-out', 'slide-in-left', 'slide-in-right');
-            
+
             // FIXED: Clear any inline styles that might interfere
             section.style.opacity = '';
             section.style.transform = '';
             section.style.display = '';
         });
-        
+
         // Show new sections
         const newLeftSection = document.getElementById(this.leftSections[index]);
         const newRightSection = document.getElementById(this.rightSections[index]);
-        
+
         console.log('Left section:', this.leftSections[index], newLeftSection ? '✅ FOUND' : '❌ NOT FOUND');
         console.log('Right section:', this.rightSections[index], newRightSection ? '✅ FOUND' : '❌ NOT FOUND');
-        
+
         if (newLeftSection) {
             // FIXED: Use CSS classes for animation
             newLeftSection.classList.add('active');
             newLeftSection.classList.add('slide-in-right');
             newLeftSection.scrollTop = 0;
-            
+
             // Remove animation class after animation completes
             setTimeout(() => {
                 newLeftSection.classList.remove('slide-in-right');
             }, 600);
         }
-        
+
         if (newRightSection) {
             // FIXED: Use CSS classes for animation
             newRightSection.classList.add('active');
             newRightSection.classList.add('slide-in-left');
             newRightSection.scrollTop = 0;
-            
+
             // Remove animation class after animation completes
             setTimeout(() => {
                 newRightSection.classList.remove('slide-in-left');
             }, 600);
         }
-        
+
         this.currentPageIndex = index;
         this.updateNavButtons();
         this.updatePageIndicator();
-        
+
         // Trigger section-specific animations
         this.triggerSectionAnimations(this.leftSections[index]);
         this.triggerSectionAnimations(this.rightSections[index]);
-        
+
         setTimeout(() => {
             this.isAnimating = false;
             console.log('✅ Animation completed');
         }, 600);
-        
+
         // Emit page change event
         this.eventManager.emit('page:changed', {
             index: index,
@@ -213,7 +213,7 @@ class PortfolioBook {
     }
 
     triggerSectionAnimations(sectionId) {
-        switch(sectionId) {
+        switch (sectionId) {
             case 'section-skills':
                 setTimeout(() => {
                     if (this.skillBars) {
@@ -300,12 +300,12 @@ class PortfolioBook {
     updateNavButtons() {
         const prevButton = document.getElementById('prev-button');
         const nextButton = document.getElementById('next-button');
-        
+
         if (prevButton) {
             prevButton.disabled = this.currentPageIndex === 0;
             prevButton.style.opacity = this.currentPageIndex === 0 ? '0.5' : '1';
         }
-        
+
         if (nextButton) {
             nextButton.disabled = this.currentPageIndex === this.leftSections.length - 1;
             nextButton.style.opacity = this.currentPageIndex === this.leftSections.length - 1 ? '0.5' : '1';
@@ -315,11 +315,11 @@ class PortfolioBook {
     updatePageIndicator() {
         const currentPageElement = document.getElementById('current-page');
         const totalPagesElement = document.getElementById('total-pages');
-        
+
         if (currentPageElement) {
             currentPageElement.textContent = this.currentPageIndex + 1;
         }
-        
+
         if (totalPagesElement) {
             totalPagesElement.textContent = this.leftSections.length;
         }
@@ -330,7 +330,10 @@ class PortfolioBook {
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
+                const href = this.getAttribute('href');
+                if (!href || href === '#') return;
+
+                const target = document.querySelector(href);
                 if (target) {
                     target.scrollIntoView({
                         behavior: 'smooth',
@@ -341,11 +344,12 @@ class PortfolioBook {
         });
     }
 
+
     // Lazy loading for images
     initLazyLoading() {
         const images = document.querySelectorAll('img[data-src]');
         if (images.length === 0) return;
-        
+
         const imageObserver = new IntersectionObserver((entries, observer) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -356,17 +360,17 @@ class PortfolioBook {
                 }
             });
         });
-        
+
         images.forEach(img => imageObserver.observe(img));
     }
 
     // Typewriter effect for text
     typeWriter(element, text, speed = 50) {
         if (!element || !text) return;
-        
+
         element.innerHTML = '';
         let i = 0;
-        
+
         const timer = setInterval(() => {
             if (i < text.length) {
                 element.innerHTML += text.charAt(i);
@@ -375,7 +379,7 @@ class PortfolioBook {
                 clearInterval(timer);
             }
         }, speed);
-        
+
         return timer;
     }
 
@@ -384,7 +388,7 @@ class PortfolioBook {
         const leftIndex = this.leftSections.indexOf(sectionName);
         const rightIndex = this.rightSections.indexOf(sectionName);
         const index = leftIndex !== -1 ? leftIndex : rightIndex;
-        
+
         if (index !== -1) {
             this.showSection(index);
         }
@@ -418,18 +422,18 @@ class PortfolioBook {
         if (this.eventManager) {
             this.eventManager.removeAllListeners();
         }
-        
+
         if (this.animationController) {
             this.animationController.cleanup();
         }
-        
+
         if (this.navigationController) {
             this.navigationController.destroy();
         }
-        
+
         // Remove event listeners
         document.removeEventListener('keydown', this.keydownHandler);
-        
+
         console.log('PortfolioBook destroyed');
     }
 }

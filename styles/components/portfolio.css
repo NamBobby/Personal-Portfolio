@@ -21,6 +21,24 @@
     position: relative;
 }
 
+.tag-skill {
+    display: inline-block;
+    background: var(--gradient-accent);
+    color: white;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    margin: 2px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.tag-skill:hover {
+    transform: scale(1.05);
+    box-shadow: var(--shadow-light);
+}
+
 .portfolio-card.animate {
     opacity: 1;
     transform: translateY(0);
@@ -68,6 +86,27 @@
 
 .portfolio-card:hover .portfolio-overlay {
     opacity: 1;
+}
+
+.portfolio-overlay .overlay-content a {
+  background: #007bff;
+  color: white;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background 0.3s ease;
+}
+
+.portfolio-overlay .overlay-content a:hover {
+  background: #0056b3;
+}
+
+
+.portfolio-content {
+    padding: 20px;
 }
 
 .overlay-content {

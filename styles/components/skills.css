@@ -284,6 +284,19 @@
     font-style: italic;
 }
 
+.reset-skills-btn{
+    margin: 1rem 0;
+    padding: 0.5rem 1rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+    border: none;
+    background: #2563eb;
+    color: white;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
 /* Skills Statistics (Optional) */
 .skills-stats {
     display: grid;
