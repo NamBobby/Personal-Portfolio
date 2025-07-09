@@ -1,4 +1,4 @@
-/* Skills Component Styles - NEW TAG-BASED DESIGN */
+/* Skills Component Styles - UPDATED WITH UNIFIED COLOR SCHEME AND LOGOS */
 
 /* Skills Container */
 .skills-categories {
@@ -74,14 +74,14 @@
 /* Skills Tags Container */
 .skills-tags {
     display: flex;
-    gap: 10px;
+    gap: 12px;
     flex-wrap: wrap;
     margin-top: 10px;
 }
 
-/* Skill Tag Base Styles */
+/* UNIFIED SKILL TAG DESIGN WITH LOGOS */
 .skill-tag {
-    padding: 8px 16px;
+    padding: 10px 16px;
     border-radius: var(--radius-full);
     font-size: var(--font-size-sm);
     font-weight: 600;
@@ -91,6 +91,16 @@
     cursor: pointer;
     position: relative;
     overflow: hidden;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 36px;
+}
+
+.skill-tag i {
+    font-size: var(--font-size-base);
+    opacity: 0.9;
+    transition: all var(--transition-normal);
 }
 
 .skill-tag::before {
@@ -100,7 +110,7 @@
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
     transition: left 0.5s ease;
 }
 
@@ -109,94 +119,105 @@
 }
 
 .skill-tag:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-light);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-medium);
 }
 
-/* Programming Languages Tags */
+.skill-tag:hover i {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+/* UNIFIED COLOR SCHEME - Different shades of blue/purple gradient */
+
+/* Programming Languages - Deep Blue */
 .skill-tag.programming {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #1e40af 0%, #3730a3 100%);
+    border-color: #1e40af;
 }
 
 .skill-tag.programming:hover {
-    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+    background: linear-gradient(135deg, #3730a3 0%, #1e40af 100%);
+    box-shadow: 0 8px 25px rgba(30, 64, 175, 0.4);
 }
 
-/* Framework Tags */
+/* Framework Tags - Medium Blue */
 .skill-tag.framework {
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    border-color: #2563eb;
 }
 
 .skill-tag.framework:hover {
-    background: linear-gradient(135deg, #f5576c 0%, #f093fb 100%);
+    background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 100%);
+    box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4);
 }
 
-/* Tool Tags */
+/* Tool Tags - Light Blue */
 .skill-tag.tool {
-    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    border-color: #3b82f6;
 }
 
 .skill-tag.tool:hover {
-    background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+    background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
 }
 
-/* Database Tags */
+/* Database Tags - Cyan Blue */
 .skill-tag.database {
-    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+    background: linear-gradient(135deg, #0891b2 0%, #0e7490 100%);
+    border-color: #0891b2;
 }
 
 .skill-tag.database:hover {
-    background: linear-gradient(135deg, #38f9d7 0%, #43e97b 100%);
+    background: linear-gradient(135deg, #0e7490 0%, #0891b2 100%);
+    box-shadow: 0 8px 25px rgba(8, 145, 178, 0.4);
 }
 
-/* AI/ML Tags */
+/* AI/ML Tags - Purple Blue */
 .skill-tag.ai {
-    background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+    background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+    border-color: #7c3aed;
 }
 
 .skill-tag.ai:hover {
-    background: linear-gradient(135deg, #fee140 0%, #fa709a 100%);
+    background: linear-gradient(135deg, #6d28d9 0%, #7c3aed 100%);
+    box-shadow: 0 8px 25px rgba(124, 58, 237, 0.4);
 }
 
-/* Cloud Tags */
+/* Cloud Tags - Teal */
 .skill-tag.cloud {
-    background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
-    color: var(--text-dark);
+    background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%);
+    border-color: #0d9488;
 }
 
 .skill-tag.cloud:hover {
-    background: linear-gradient(135deg, #fed6e3 0%, #a8edea 100%);
+    background: linear-gradient(135deg, #0f766e 0%, #0d9488 100%);
+    box-shadow: 0 8px 25px rgba(13, 148, 136, 0.4);
 }
 
-/* Soft Skills Tags */
+/* Soft Skills Tags - Indigo */
 .skill-tag.soft {
-    background: linear-gradient(135deg, #d299c2 0%, #fef9d7 100%);
-    color: var(--text-dark);
+    background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
+    border-color: #4f46e5;
 }
 
 .skill-tag.soft:hover {
-    background: linear-gradient(135deg, #fef9d7 0%, #d299c2 100%);
+    background: linear-gradient(135deg, #4338ca 0%, #4f46e5 100%);
+    box-shadow: 0 8px 25px rgba(79, 70, 229, 0.4);
 }
 
-/* Methodology Tags */
-.skill-tag.methodology {
-    background: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%);
+/* Special hover effects for technical skills with logos */
+.skill-tag.programming:hover i,
+.skill-tag.framework:hover i,
+.skill-tag.tool:hover i,
+.skill-tag.database:hover i,
+.skill-tag.ai:hover i,
+.skill-tag.cloud:hover i {
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
 }
 
-.skill-tag.methodology:hover {
-    background: linear-gradient(135deg, #66a6ff 0%, #89f7fe 100%);
-}
-
-/* Design Tags */
-.skill-tag.design {
-    background: linear-gradient(135deg, #fdbb2d 0%, #22c1c3 100%);
-}
-
-.skill-tag.design:hover {
-    background: linear-gradient(135deg, #22c1c3 0%, #fdbb2d 100%);
-}
-
-/* Language Skills Section */
+/* Language Skills Section - Kept original design */
 .language-skills {
     display: grid;
     gap: 20px;
@@ -248,12 +269,12 @@
 }
 
 .language-level.native {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #1e40af 0%, #3730a3 100%);
     color: white;
 }
 
 .language-level.intermediate {
-    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
     color: white;
 }
 
@@ -303,35 +324,6 @@
     letter-spacing: 0.5px;
 }
 
-/* Filter Buttons (Optional) */
-.skills-filter {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-bottom: 30px;
-    flex-wrap: wrap;
-}
-
-.skills-filter-btn {
-    background: var(--background-white);
-    border: 2px solid var(--border-color);
-    color: var(--text-dark);
-    padding: 8px 20px;
-    border-radius: var(--radius-full);
-    cursor: pointer;
-    transition: all var(--transition-normal);
-    font-weight: 600;
-    font-size: var(--font-size-sm);
-}
-
-.skills-filter-btn:hover,
-.skills-filter-btn.active {
-    background: var(--primary-color);
-    border-color: var(--primary-color);
-    color: white;
-    transform: translateY(-2px);
-}
-
 /* Animation for skills appearing */
 .skills-animate .skill-tag {
     opacity: 0;
@@ -379,12 +371,18 @@
     }
     
     .skills-tags {
-        gap: 8px;
+        gap: 10px;
     }
     
     .skill-tag {
-        padding: 6px 12px;
+        padding: 8px 12px;
         font-size: var(--font-size-xs);
+        gap: 6px;
+        min-height: 32px;
+    }
+    
+    .skill-tag i {
+        font-size: var(--font-size-sm);
     }
     
     .language-item {
@@ -436,13 +434,19 @@
     }
     
     .skills-tags {
-        gap: 6px;
+        gap: 8px;
         justify-content: center;
     }
     
     .skill-tag {
-        padding: 5px 10px;
+        padding: 6px 10px;
         font-size: 0.7rem;
+        gap: 4px;
+        min-height: 28px;
+    }
+    
+    .skill-tag i {
+        font-size: 0.8rem;
     }
     
     .language-item {
@@ -459,11 +463,6 @@
         grid-template-columns: 1fr;
         gap: 10px;
         padding: 12px;
-    }
-    
-    .skills-filter {
-        flex-direction: column;
-        align-items: center;
     }
 }
 
@@ -484,10 +483,16 @@
         border-color: var(--border-dark, #404040);
     }
     
-    .skills-filter-btn {
-        background: var(--background-dark-light, #2d2d2d);
-        border-color: var(--border-dark, #404040);
-        color: var(--text-light);
+    /* Dark mode skill tags maintain the same colors for consistency */
+    .skill-tag.programming,
+    .skill-tag.framework,
+    .skill-tag.tool,
+    .skill-tag.database,
+    .skill-tag.ai,
+    .skill-tag.cloud,
+    .skill-tag.soft {
+        background: linear-gradient(135deg, #0e7490 0%, #0891b2 100%);
+        box-shadow: 0 8px 25px rgba(8, 145, 178, 0.4);
     }
 }
 
@@ -506,13 +511,13 @@
         border: 1pt solid black;
     }
     
+    .skill-tag i {
+        color: black !important;
+    }
+    
     .language-item {
         box-shadow: none;
         border: 1pt solid black;
-    }
-    
-    .skills-filter {
-        display: none;
     }
 }
 
@@ -542,9 +547,49 @@
         transform: none;
     }
     
+    .skill-tag:hover i {
+        transform: none;
+    }
+    
     .skills-animate .skill-tag {
         animation: none;
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+/* Focus Management for Accessibility */
+.skill-tag:focus {
+    outline: 2px solid white;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.3);
+}
+
+/* Special focus styles for different skill categories */
+.skill-tag.programming:focus {
+    box-shadow: 0 0 0 4px rgba(30, 64, 175, 0.3);
+}
+
+.skill-tag.framework:focus {
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.3);
+}
+
+.skill-tag.tool:focus {
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.3);
+}
+
+.skill-tag.database:focus {
+    box-shadow: 0 0 0 4px rgba(8, 145, 178, 0.3);
+}
+
+.skill-tag.ai:focus {
+    box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.3);
+}
+
+.skill-tag.cloud:focus {
+    box-shadow: 0 0 0 4px rgba(13, 148, 136, 0.3);
+}
+
+.skill-tag.soft:focus {
+    box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.3);
 }
